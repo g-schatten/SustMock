@@ -1,57 +1,48 @@
-# QueueStorm Warmup — CRM Ticket Classifier
+# SustMock
 
-A small FastAPI service that classifies customer support tickets by case type, severity, department, and generates a one-line agent summary. Built for the **SUST CSE Carnival 2026 — Mock Preliminary Round**.
+CRM ticket classifier for the SUST CSE Carnival 2026 mock preliminary.
 
-## Features
-
-- `GET /health` — service health check
-- `POST /sort-ticket` — classify a single CRM ticket (rule-based, no LLM)
-
-## Quick start (local)
-
-### Prerequisites
-
-- Python 3.11+
-
-### Setup
+## Run locally
 
 ```bash
 python -m venv .venv
-
-# Windows
-.venv\Scripts\activate
-
-# macOS / Linux
-source .venv/bin/activate
+.venv\Scripts\activate        # Windows
+# source .venv/bin/activate   # macOS / Linux
 
 pip install -r requirements.txt
-```
-
-### Run
-
-```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Verify
-
 ```bash
 curl http://localhost:8000/health
-```
 
-```bash
 curl -X POST http://localhost:8000/sort-ticket \
   -H "Content-Type: application/json" \
   -d "{\"ticket_id\":\"T-001\",\"channel\":\"app\",\"locale\":\"en\",\"message\":\"I sent 5000 taka to a wrong number this morning, please help me get it back\"}"
 ```
 
-Interactive API docs: `http://localhost:8000/docs`
+## Tests
+
+```bash
+pip install pytest
+pytest tests/ -v
+```
+
+## Deploy (Render)
+
+1. Connect this repo as a **Web Service**.
+2. Set **PYTHON_VERSION** to `3.12.8`.
+3. Build: `pip install -r requirements.txt`
+4. Start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Health check path: `/health`
+
+Or use **New → Blueprint** with the included `render.yaml`.
 
 ## API
 
 ### `POST /sort-ticket`
 
-**Request**
+Request:
 
 ```json
 {
@@ -62,7 +53,7 @@ Interactive API docs: `http://localhost:8000/docs`
 }
 ```
 
-**Response**
+Response:
 
 ```json
 {
@@ -75,76 +66,3 @@ Interactive API docs: `http://localhost:8000/docs`
   "confidence": 0.85
 }
 ```
-
-### Classification rules
-
-| case_type | Typical triggers |
-|-----------|------------------|
-| `wrong_transfer` | wrong number/account/recipient |
-| `payment_failed` | failed payment, balance deducted |
-| `refund_request` | refund, money back, changed my mind |
-| `phishing_or_social_engineering` | OTP, PIN, password, scam calls |
-| `other` | general app/service issues |
-
-`human_review_required` is `true` for **critical** severity or **phishing** cases.
-
-## Tests
-
-```bash
-pip install pytest
-pytest tests/ -v
-```
-
-## Deploy to Render
-
-1. Push this repository to a **public** GitHub repo.
-2. Sign in at [render.com](https://render.com).
-3. **New → Blueprint** and connect the repo (uses `render.yaml`), **or** create a **Web Service** manually:
-   - **Build command:** `pip install -r requirements.txt`
-   - **Start command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-   - **Health check path:** `/health`
-4. After deploy, your live base URL will look like `https://queuestorm-ticket-sorter.onrender.com`.
-
-## Deploy to Railway
-
-1. Push to GitHub.
-2. Create a new project on [railway.app](https://railway.app) from the repo.
-3. Railway auto-detects Python; set start command if needed:
-
-   ```
-   uvicorn app.main:app --host 0.0.0.0 --port $PORT
-   ```
-
-4. Enable a public HTTPS domain from the service settings.
-
-## Submission checklist
-
-| Field | Value |
-|-------|-------|
-| Team name | *(your registered team name)* |
-| GitHub repository URL | *(public repo link)* |
-| Live API base URL | `https://<your-host>/health` must respond |
-| Deployment platform | Render / Railway / Fly / etc. |
-| LLM used | **No** — rule-based classifier |
-
-## Project structure
-
-```
-.
-├── app/
-│   ├── classifier.py   # Rule-based ticket classification
-│   └── main.py         # FastAPI application
-├── tests/
-│   └── test_classifier.py
-├── requirements.txt
-├── Procfile
-├── render.yaml
-└── README.md
-```
-
-## License
-
-MIT
-# SustMock
-# SustMock
-# SustMock

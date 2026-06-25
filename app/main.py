@@ -1,5 +1,3 @@
-"""QueueStorm Warmup: CRM ticket classification service."""
-
 from __future__ import annotations
 
 from typing import Literal
@@ -9,11 +7,7 @@ from pydantic import BaseModel, Field
 
 from app.classifier import classify_ticket
 
-app = FastAPI(
-    title="QueueStorm Ticket Sorter",
-    description="Classifies customer support tickets for routing and triage.",
-    version="1.0.0",
-)
+app = FastAPI()
 
 
 class SortTicketRequest(BaseModel):

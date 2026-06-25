@@ -1,26 +1,7 @@
-"""Rule-based CRM ticket classifier for QueueStorm warmup."""
-
 from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-
-
-CASE_TYPES = (
-    "wrong_transfer",
-    "payment_failed",
-    "refund_request",
-    "phishing_or_social_engineering",
-    "other",
-)
-
-SEVERITIES = ("low", "medium", "high", "critical")
-DEPARTMENTS = (
-    "customer_support",
-    "dispute_resolution",
-    "payments_ops",
-    "fraud_risk",
-)
 
 
 @dataclass(frozen=True)
@@ -120,11 +101,7 @@ def _extract_amount(text: str) -> str | None:
     return None
 
 
-def _build_summary(
-    case_type: str,
-    message: str,
-    severity: str,
-) -> str:
+def _build_summary(case_type: str, message: str, severity: str) -> str:
     amount = _extract_amount(message)
     amount_part = f"{amount} BDT " if amount else ""
 

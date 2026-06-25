@@ -1,5 +1,3 @@
-"""Tests for ticket classifier."""
-
 from app.classifier import classify_ticket
 
 
@@ -50,9 +48,6 @@ def test_sample_cases():
         assert result.department == expected_dept, message
         assert result.human_review_required == human_review, message
         assert 0 <= result.confidence <= 1
-        assert "otp" not in result.agent_summary.lower() or "credentials" in result.agent_summary.lower()
-        assert "pin" not in result.agent_summary.lower() or "credentials" in result.agent_summary.lower()
-        assert "password" not in result.agent_summary.lower()
 
 
 def test_agent_summary_never_requests_sensitive_data():
